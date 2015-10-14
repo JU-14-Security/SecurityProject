@@ -34,23 +34,24 @@ public class TopController {
 	public TopController() {
 
 	}
-	@RequestMapping("/")
-	public String indexPage(Model model){
-		
-		return "index";
-	}
 
+	
+	@RequestMapping("/Home")
+	public String getList(Model model) {
+		
+		return "home";
+	}
 	
 	@RequestMapping("/Login")
 	public String login(Model model) {
 		System.out.println("Du lyckades logga in");
-		return "listan-template";
+		return "home";
 	}
 	
 	@RequestMapping("/Register")
 	public String register(Model model) {
 		System.out.println("Du lyckades registrera dig");
-		return "listan-template";
+		return "home";
 	}
 
 }
