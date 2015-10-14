@@ -26,7 +26,7 @@ public class TopController {
 	
 	/*
 	@Inject
-	public TBDController() {
+	public TBDController(ListHandler lh) {
 		
 
 	}
@@ -38,7 +38,7 @@ public class TopController {
 	
 	@RequestMapping("/Home")
 	public String getList(Model model) {
-		
+		System.out.println("tja förfan");
 		return "home";
 	}
 	
