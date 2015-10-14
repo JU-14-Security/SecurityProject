@@ -8,6 +8,6 @@
  
             
 	<task:annotation-driven />
-	<bean name="TBDController" class="controller.TBDController" />
+	<bean name="TopController" class="controller.TopController" />
 	
 </beans>

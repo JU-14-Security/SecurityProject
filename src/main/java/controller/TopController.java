@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  */
 @Controller
-public class TBDController {
+public class TopController {
 
 
 	/**
@@ -31,15 +31,26 @@ public class TBDController {
 
 	}
 	*/
-	public TBDController() {
+	public TopController() {
 
 	}
-
-	@RequestMapping("/TBD")
-	public String getCenters(Model model) {
-		
+	@RequestMapping("/")
+	public String indexPage(Model model){
 		
 		return "index";
+	}
+
+	
+	@RequestMapping("/Login")
+	public String login(Model model) {
+		System.out.println("Du lyckades logga in");
+		return "listan-template";
+	}
+	
+	@RequestMapping("/Register")
+	public String register(Model model) {
+		System.out.println("Du lyckades registrera dig");
+		return "listan-template";
 	}
 
 }

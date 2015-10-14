@@ -11,21 +11,8 @@
 	</head> 
 	<body>
 	
-  	<h1>Logga in</h1>
-	<form action="/TopListan/Login">
-	  User:<br>
-	  <input type="text" name="User">
-	  <br>
-	  Password:<br>
-	  <input type="text" name="Password">
-	  <br><br>
-	  <input type="submit" value="Submit">
-	</form>
-
-<br><br>
-	<h1>Ny användare?</h1>
-	<h2>Registrera dig här</h2>
-	<form action="/TopListan/Register">
+  	
+	<form action="login.jsp">
 	  User:<br>
 	  <input type="text" name="User">
 	  <br>
