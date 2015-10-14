@@ -9,6 +9,11 @@
 		<meta charset="utf-8">
 		<title>Home</title>
 		
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+		
 		<style type="text/css">
 			body {
 				font-family: Verdana, Geneva, sans-serif;
@@ -33,10 +38,32 @@
 	</head> 
 	<body>
 	<div id="nav-header">
-		<div id="login-form">
 		
+		
+		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">New User? Register here</button>
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Modal Header</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>Some text in the modal.</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	
+	  </div>
+	</div>
+	<div id="login-form">
 		<form action="">
-		<a style="padding-right:10px" href="">New User? Register here</a>
 		  User:
 		  <input type="text" name="User">
 		 

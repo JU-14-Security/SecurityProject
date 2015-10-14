@@ -42,16 +42,5 @@ public class TopController {
 		return "home";
 	}
 	
-	@RequestMapping("/Login")
-	public String login(Model model) {
-		System.out.println("Du lyckades logga in");
-		return "home";
-	}
-	
-	@RequestMapping("/Register")
-	public String register(Model model) {
-		System.out.println("Du lyckades registrera dig");
-		return "home";
-	}
 
 }
