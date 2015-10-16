@@ -9,5 +9,8 @@
             
 	<task:annotation-driven />
 	<bean name="TopController" class="controller.TopController" />
+	<bean name="UserManager" class="model.UserManager"/>
+	<bean name="UserDAO" class="service.UserDAO"/>
+	<bean name="Crypter" class="model.DataCrypter"/>
 	
 </beans>

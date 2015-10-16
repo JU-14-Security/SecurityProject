@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <html>
 	<head>
@@ -50,10 +51,24 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Modal Header</h4>
+	        <h4 class="modal-title">Register</h4>
 	      </div>
 	      <div class="modal-body">
-	        <p>Some text in the modal.</p>
+	        <form method="POST" action="Register">
+				   <table border="0">
+	                <tr>
+	                    <td>Username:</td>
+	                    <td><input type="text" name="Username"></td>
+	                </tr>
+	                <tr>
+	                    <td>Password:</td>
+	                    <td><input type="password" name="Password"></td>
+	                </tr>
+	                <tr>
+	                    <td colspan="2" align="center"><input type="submit" value="Register" /></td>
+	                </tr>
+            </table>
+		</form>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -63,14 +78,14 @@
 	  </div>
 	</div>
 	<div id="login-form">
-		<form action="">
+		<form action="Login" method="POST">
 		  User:
-		  <input type="text" name="User">
+		  <input type="text" name="Username">
 		 
 		  Password:
-		  <input type="text" name="Password">
+		  <input type="password" name="Password">
 		  
-		  <input type="submit" value="Submit">
+		  <input type="submit" value="Log in">
 		  
 		</form>
 		</div>

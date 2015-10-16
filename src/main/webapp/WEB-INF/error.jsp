@@ -8,8 +8,8 @@
 <title>Error</title>
 </head>
 <body>
-<h1>${Exception}</h1>
+
 <br/>
-<p>Kolla konsolen för mer info</p>
+<p>Nånting gick fel</p>
 </body>
 </html>
