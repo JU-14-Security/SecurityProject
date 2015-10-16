@@ -30,7 +30,7 @@ public class UserDAO {
 			em = factory.createEntityManager();
 
 		} catch (PersistenceException e) {
-
+			e.printStackTrace();
 		}
 	}
 

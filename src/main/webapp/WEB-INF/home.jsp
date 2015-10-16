@@ -38,34 +38,102 @@
 		</style>
 	</head> 
 	<body>
-	<div id="nav-header">
+<div id="nav-header">
+			
+		<!--        REGISTRERING                       -->	
+			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">New User? Register here</button>
+	
+		<!-- Modal -->
+		<div id="myModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
 		
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Register</h4>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="Register">
+					   <table border="0">
+		                <tr>
+		                    <td>Username:</td>
+		                    <td><input type="text" name="Username"></td>
+		                </tr>
+		                <tr>
+		                    <td>Password:</td>
+		                    <td><input type="password" name="Password"></td>
+		                </tr>
+		                <tr>
+		                    <td colspan="2" align="center"><input type="submit" value="Register" /></td>
+		                </tr>
+	            </table>
+			</form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
 		
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">New User? Register here</button>
+		  </div>
+	</div>
+		
+		<!--        LOGIN FORM             -->
+		<div id="login-form">
+			<form action="Login" method="POST">
+			  User:
+			  <input type="text" name="Username">
+			 
+			  Password:
+			  <input type="password" name="Password">
+			  
+			  <input type="submit" value="Log in">
+			  
+			</form>
+			</div>
+</div>
+	
+	<br>
+	
+		
+	<ul>
+	<c:forEach items="${TopList}" var="item">
+			
+		<li>${item.product}    ${item.productUrl}</li>
+				
+			
+	</c:forEach> 
+	</ul>
+	<br>
+	
+		
+	<hr>
+	<!--            ADD ITEM                -->
+	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal2">Add item to list</button>
 
 	<!-- Modal -->
-	<div id="myModal" class="modal fade" role="dialog">
+	<div id="myModal2" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
 	
 	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Register</h4>
+	        <h4 class="modal-title">Add Product</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form method="POST" action="Register">
+	        <form method="POST" action="addItem">
 				   <table border="0">
 	                <tr>
-	                    <td>Username:</td>
-	                    <td><input type="text" name="Username"></td>
+	                    <td>Product name:</td>
+	                    <td><input type="text" name="Product"></td>
 	                </tr>
 	                <tr>
-	                    <td>Password:</td>
-	                    <td><input type="password" name="Password"></td>
+	                    <td>Product Url:</td>
+	                    <td><input type="text" name="Producturl"></td>
 	                </tr>
 	                <tr>
-	                    <td colspan="2" align="center"><input type="submit" value="Register" /></td>
+	                    <td colspan="2" align="center"><input type="submit" value="add item" /></td>
 	                </tr>
             </table>
 		</form>
@@ -77,40 +145,8 @@
 	
 	  </div>
 	</div>
-	<div id="login-form">
-		<form action="Login" method="POST">
-		  User:
-		  <input type="text" name="Username">
-		 
-		  Password:
-		  <input type="password" name="Password">
-		  
-		  <input type="submit" value="Log in">
-		  
-		</form>
-		</div>
-	</div>
+		
 	
-	<br><br>
-	
-	<div id="list">
-	<h3>Listan över saker</h3>
-	<br>
-  	<ul>
-  	 
-  		<li>sak 1</li>
-  		<li>sak 2</li>
-  		<li>sak 3</li>
-  		<li>sak 4</li>
-  		<li>..</li>
-  	
-  	
-  	</ul>
-	</div>
-	
-	<hr>
-	<p>Dom här knapparna ska bara visas när man är inloggad(?)</p>
-	<button>Lägg till grej i listan knapp</button>(Redirektas till "lägga till saker i lista sidan")
 	<br><br>
 	<button>Betala </button>Visa/mastercard betalning för att höja sin saks rank i listan
 	<hr>
