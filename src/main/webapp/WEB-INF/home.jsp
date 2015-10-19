@@ -43,11 +43,11 @@ body {
 }
 	ul {
 		display:table; margin:0 auto;
-		list-style-image: none;
+		list-style-type: none;
 	}
 	
-	li{
-		background-image: url("/bullet.png");
+	ul li{
+		background-image: url("bullet.png");
 	}
 
 #list {
