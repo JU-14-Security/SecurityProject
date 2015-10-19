@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
@@ -26,11 +27,11 @@ body {
 	height: 100%;
 }
 
-#header {
+#menu-header {
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
-	height: 80px;
+	height: 40px;
 	margin: 0px auto;
 	background-color: #FFFFFF;
 	color: #2879b3;
@@ -41,33 +42,45 @@ body {
 #login-form {
 	float: right;
 }
-	ul {
-		display:table; margin:0 auto;
-		list-style-image: none;
-	}
-	
-	li{
-		background-image: url("/bullet.png");
-	}
 
 #list {
 	margin-left: 30%;
 }
+#header {
+	height: 80px;
+	margin: 0px auto;
+	background-color: #FFFFFF;
+	color: #2879b3;
+	padding-left: 40%;
+	padding-top: 1%;
+}
+.stencil {
+	margin: 0px auto;
+	font-size: 4em;
+	font-family: Impact, Charcoal, sans-serif;
+	display: inline;
+	}
+#menu-items {
+	margin: 0px auto;
+}	
 </style>
 </head>
 <body>
 	<div id="header">
-		<h3 style="float: right; margin-right: 20%;">Logged in as:
-			${username}</h3>
-		<form action="/TopListan/Logout">
+		<h1 class=stencil>TopListan  </h1>
+	</div>
+	<div id="menu-header">
+		<div id="menu-items">
+		<form style="float:right;margin-right:20%;" action="/TopListan/Logout">
 		<input type="submit" value="Log out" />
 		</form>
+		<p style="float: right; margin-right: 10%;">Logged in as:
+			${username}</p>
+		</div>
 	</div>
 
 
 	<br>
-	
-
 	<ul>
 	<c:forEach items="${TopList}" var="item">
 			
@@ -76,10 +89,9 @@ body {
 			
 	</c:forEach> 
 	</ul>
-
 	<br>
-	
-		
+
+
 	<hr>
 	<!--            ADD ITEM                -->
 	<button type="button" class="btn btn-info" data-toggle="modal"
@@ -127,6 +139,6 @@ body {
 	<button>Betala</button>
 	Visa/mastercard betalning för att höja sin saks rank i listan
 	<hr>
-	
-	</body>
+
+</body>
 </html>
