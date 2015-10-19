@@ -2,9 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:jpa="http://www.springframework.org/data/jpa"
+	xmlns:security="http://www.springframework.org/schema/security"
+	
 	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/data/jpa http://www.springframework.org/data/jpa/spring-jpa-1.3.xsd">
+		http://www.springframework.org/data/jpa http://www.springframework.org/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-4.0.xsd">
  
             
 	<task:annotation-driven />
@@ -15,4 +19,11 @@
  	<bean name="ListDAO" class="service.ListDAO"/>
 	<bean name="Crypter" class="model.DataCrypter"/>
  
+ <!-- 
+	 <security:http auto-config="true">
+	<security:form-login login-page="/Login" default-target-url="/Home"
+	authentication-failure-url="/Login"/>
+	</security:http>
+	
+ -->	
 </beans>
