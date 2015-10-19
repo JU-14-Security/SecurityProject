@@ -96,12 +96,13 @@ public class TopController {
 			model.setViewName("redirect:/Home");
 			return model;
 
-		} else
-			model.addObject("error", "invalid username or password");
+		} else{
+			model.addObject("errorLog", "invalid username or password");
 
 		System.out.println("Du misslyckades att logga in");
 		model.setViewName("Welcome");
 		return model;
+		}
 	}
 
 	@RequestMapping(value = "/Register", method = RequestMethod.POST)
@@ -119,11 +120,14 @@ public class TopController {
 			model.setViewName("redirect:/Home");
 			return model;
 
-		} else
+		} else{
 
 			System.out.println("Du misslyckades att registrera dig");
-		model.setViewName("redirect/error");
-		return model;
+			model.setViewName("Welcome");
+			model.addObject("errorReg", "Username already exists");
+			return model;
+		}
+		
 	}
 
 	@RequestMapping(value = "/Logout")
