@@ -51,79 +51,88 @@ public class TopController {
 	}
 
 	@RequestMapping(value = "/Welcome")
-	public String welcome(Model model) {
+	public ModelAndView welcome() {
 
-		return "Welcome";
+		return new ModelAndView("Welcome");
 	}
 
 	@RequestMapping(value = "/Home")
-	public String home(Model model, HttpServletRequest request) {
+	public ModelAndView home(HttpServletRequest request) {
 
+		ModelAndView model = new ModelAndView("home");
 		List<TopList> toplist = listManager.getTopListFromDB();
-		model.addAttribute("username", request.getSession().getAttribute("username"));
-		model.addAttribute("TopList", toplist);
+		model.addObject("username", request.getSession().getAttribute("username"));
+		model.addObject("TopList", toplist);
 
-		return "home";
+		return model;
 	}
 
 	@RequestMapping(value = "/addItem", method = RequestMethod.POST)
-	public String addListItem(HttpServletRequest request, Model model, @RequestParam("Product") String product,
+	public ModelAndView addListItem(HttpServletRequest request, @RequestParam("Product") String product,
 			@RequestParam("Producturl") String producturl) {
 
+		ModelAndView model = new ModelAndView();
 		System.out.println("Entered additem");
 		listManager.addListItem(product, producturl);
 		List<TopList> toplist = listManager.getTopListFromDB();
-		model.addAttribute("username", request.getSession().getAttribute("username"));
-		model.addAttribute("TopList", toplist);
-
-		return "home";
+		//model.addObject("username", request.getSession().getAttribute("username"));
+		model.addObject("TopList", toplist);
+		model.setViewName("redirect:/Home");
+		return model;
 	}
 
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
-	public String login(HttpServletRequest request, Model model, @RequestParam("username") String userName,
+	public ModelAndView login(HttpServletRequest request, @RequestParam("username") String userName,
 			@RequestParam("password") String passWord) {
 
+		ModelAndView model = new ModelAndView();
 		List<TopList> toplist = listManager.getTopListFromDB();
 
 		if (userManager.handleUserLogin(userName, passWord)) {
 			request.getSession().setAttribute("username", userName);
-			model.addAttribute("username", userName);
-			model.addAttribute("TopList", toplist);
+			//model.addObject("username", userName);
+			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades logga in");
-			return "home";
+			model.setViewName("redirect:/Home");
+			return model;
 
 		} else
-			model.addAttribute("error", "invalid username or password");
+			model.addObject("error", "invalid username or password");
 
 		System.out.println("Du misslyckades att logga in");
-		return "Welcome";
+		model.setViewName("Welcome");
+		return model;
 	}
 
 	@RequestMapping(value = "/Register", method = RequestMethod.POST)
-	public String register(HttpServletRequest request, Model model, @RequestParam("username") String userName,
+	public ModelAndView register(HttpServletRequest request, @RequestParam("username") String userName,
 			@RequestParam("password") String passWord) {
 
+		ModelAndView model = new ModelAndView();
 		List<TopList> toplist = listManager.getTopListFromDB();
 
 		if (userManager.addUser(userName, passWord)) {
 			request.getSession().setAttribute("username", userName);
-			model.addAttribute("username", userName);
-			model.addAttribute("TopList", toplist);
+			//model.addObject("username", userName);
+			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades registrera dig");
-			return "home";
+			model.setViewName("redirect:/Home");
+			return model;
 
 		} else
 
 			System.out.println("Du misslyckades att registrera dig");
-		return "error";
+		model.setViewName("redirect/error");
+		return model;
 	}
 
 	@RequestMapping(value = "/Logout")
-	public String logout(HttpServletRequest request) {
+	public ModelAndView logout(HttpServletRequest request) {
 		
+		ModelAndView model = new ModelAndView("redirect:/Welcome");
 		request.getSession().removeAttribute("username");
 		
-		return "Welcome";
+		return model;
 	}
 
 }

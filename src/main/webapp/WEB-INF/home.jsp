@@ -41,9 +41,14 @@ body {
 #login-form {
 	float: right;
 }
-			ul {
-				display:table; margin:0 auto;
-			}
+	ul {
+		display:table; margin:0 auto;
+		list-style-image: none;
+	}
+	
+	li{
+		background-image: url("/bullet.png");
+	}
 
 #list {
 	margin-left: 30%;
