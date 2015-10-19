@@ -28,10 +28,9 @@ public class UserManager {
 	
 	public boolean handleUserLogin(String userName, String passWord){
 		try {
-			String userNameCrypto = crypter.inputHasher(userName);
 			String passWordCrypto = crypter.inputHasher(passWord);
 			
-			if(userDAO.getUserFromDB(userNameCrypto, passWordCrypto)){
+			if(userDAO.getUserFromDB(userName , passWordCrypto)){
 				
 				return true;
 			}else
@@ -50,11 +49,11 @@ public class UserManager {
 	
 	public boolean addUser(String userName, String passWord){
 		try {
-			String userNameCrypto = crypter.inputHasher(userName);
+			
 			String passWordCrypto = crypter.inputHasher(passWord);
-			if(userDAO.checkifAvailable(userNameCrypto)){
+			if(userDAO.checkifAvailable(userName)){
 				
-				userDAO.addUser(new User(userNameCrypto,passWordCrypto));
+				userDAO.addUser(new User(userName,passWordCrypto));
 				return true;
 			}else
 				return false;
