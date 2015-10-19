@@ -34,6 +34,9 @@
 			#list {
 				margin-left:30%;
 			}
+			ul {
+				display:table; margin:0 auto;
+			}
 
 		</style>
 	</head> 
@@ -95,7 +98,7 @@
 	
 	<br>
 	
-		
+
 	<ul>
 	<c:forEach items="${TopList}" var="item">
 			
@@ -104,6 +107,7 @@
 			
 	</c:forEach> 
 	</ul>
+
 	<br>
 	
 		
