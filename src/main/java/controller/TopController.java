@@ -49,8 +49,10 @@ public class TopController {
 	public TopController() {
 
 	}
+	
+	
 
-	@RequestMapping(value = "/Welcome")
+	@RequestMapping(value ={ "/Welcome", "/{s}/**", "/{url}"})
 	public ModelAndView welcome() {
 
 		return new ModelAndView("Welcome");
@@ -59,10 +61,21 @@ public class TopController {
 	@RequestMapping(value = "/Home")
 	public ModelAndView home(HttpServletRequest request) {
 
-		ModelAndView model = new ModelAndView("home");
-		List<TopList> toplist = listManager.getTopListFromDB();
-		model.addObject("username", request.getSession().getAttribute("username"));
-		model.addObject("TopList", toplist);
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(request.getSession().getAttribute("username") != null)
+		{
+			model.setViewName("home");
+			List<TopList> toplist = listManager.getTopListFromDB();
+			model.addObject("username", request.getSession().getAttribute("username"));
+			model.addObject("TopList", toplist);
+		}
+		else
+		{
+			model.setViewName("redirect:/Welcome");
+		}
+		
 
 		return model;
 	}
@@ -72,12 +85,21 @@ public class TopController {
 			@RequestParam("Producturl") String producturl) {
 
 		ModelAndView model = new ModelAndView();
-		System.out.println("Entered additem");
-		listManager.addListItem(product, producturl);
-		List<TopList> toplist = listManager.getTopListFromDB();
-		//model.addObject("username", request.getSession().getAttribute("username"));
-		model.addObject("TopList", toplist);
-		model.setViewName("redirect:/Home");
+		
+		if(request.getSession().getAttribute("username") != null)
+		{
+			System.out.println("Entered additem");
+			listManager.addListItem(product, producturl);
+			List<TopList> toplist = listManager.getTopListFromDB();
+			
+			model.addObject("TopList", toplist);
+			model.setViewName("redirect:/Home");
+		}
+		else
+		{
+			model.setViewName("redirect:/Welcome");
+		}
+		
 		return model;
 	}
 
@@ -90,7 +112,7 @@ public class TopController {
 
 		if (userManager.handleUserLogin(userName, passWord)) {
 			request.getSession().setAttribute("username", userName);
-			//model.addObject("username", userName);
+			
 			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades logga in");
 			model.setViewName("redirect:/Home");
@@ -105,16 +127,25 @@ public class TopController {
 		}
 	}
 
-	@RequestMapping(value = "/Register", method = RequestMethod.POST)
-	public ModelAndView register(HttpServletRequest request, @RequestParam("username") String userName,
-			@RequestParam("password") String passWord) {
+	@RequestMapping(value = "/Register", method = {RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView register(HttpServletRequest request, @RequestParam(value="username", required=false) String userName,
+			@RequestParam(value="password", required = false) String passWord) {
 
+		try{
+			
+		
 		ModelAndView model = new ModelAndView();
 		List<TopList> toplist = listManager.getTopListFromDB();
 
+		if(userName.isEmpty() || userName == null || passWord.isEmpty() || passWord == null)
+		{
+			model.setViewName("redirect:/Welcome");
+			return model;
+		}
+		
 		if (userManager.addUser(userName, passWord)) {
 			request.getSession().setAttribute("username", userName);
-			//model.addObject("username", userName);
+			
 			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades registrera dig");
 			model.setViewName("redirect:/Home");
@@ -126,6 +157,10 @@ public class TopController {
 			model.setViewName("Welcome");
 			model.addObject("errorReg", "Username already exists");
 			return model;
+		}
+		}catch(NullPointerException npe)
+		{
+			return new ModelAndView("redirect:/Welcome");
 		}
 		
 	}
