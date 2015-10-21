@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;  charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -18,7 +18,34 @@
 <script
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
 
+
+$('body').on('hidden.bs.modal', '.modal', function () {
+	console.log("hehe");
+    $(this).removeData('bs.modal');
+  });
+
+function hideListPick()
+{
+    $("#pickItem").hide();
+}
+function hidePayment()
+{
+    $("#payment-div").hide();
+ 
+}
+function showListPick()
+{
+    $("#pickItem").show();
+ 
+}
+function showPayment()
+{
+    $("#payment-div").show();
+ 
+}
+</script>
 <style type="text/css">
 body {
 	font-family: Verdana, Geneva, sans-serif;
@@ -82,29 +109,31 @@ body {
 	</div>
 	<div id="menu-header">
 		<div id="menu-items">
-			<form style="float: right; margin-right: 20%;"
+						<form style="float: right; margin-right: 20%;"
 				action="/TopListan/Logout">
 				<input type="submit" value="Log out" />
 			</form>
 			<p style="float: right; margin-right: 10%;">Logged in as:
-				${username.getUsername()}</p>
+				${username.username}</p>
 		</div>
 	</div>
 
 
 	<br>
+	<div id="itemlist">
 	<ul>
 		<c:forEach items="${TopList}" var="item">
 
-			<li>${item.product}${item.productUrl}</li>
+			<li>${item.product}    ${item.productUrl}</li>
 
 
 		</c:forEach>
 	</ul>
+	</div>
 	<br>
 
 
-	<hr>
+	
 	<!--            ADD ITEM                -->
 	<button type="button" class="btn btn-info" data-toggle="modal"
 		data-target="#myModal2">Add item to list</button>
@@ -148,30 +177,58 @@ body {
 
 	<br>
 	<br>
+	<!--            PAY                -->
+	<button type="button" class="btn btn-info" data-toggle="modal"
+		data-target="#myModal3" onclick="hidePayment(),showListPick()">Add value to your item</button>
 
-	<button data-toggle="modal" data-target="#pay-modal"
-		class="btn btn-info" type="button">Betala</button>
-	Visa/mastercard betalning för att höja sin saks rank i listan
-	<hr>
-	<div id="pay-modal" class="modal fade" role="dialog">
+	<!-- Modal -->
+	<div id="myModal3" class="modal fade" role="dialog" style="margin-left:-15%;">
 		<div class="modal-dialog">
-			<div class="modal-content">
+
+			<!-- Modal content-->
+			<div class="modal-content" style="width:800px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Add Funds</h4>
+					<h4 class="modal-title">Payment</h4>
 				</div>
 				<div class="modal-body">
+				
+				<div id="pickItem">
+				<h2>Your submissions</h2>
 					<ul>
 						<c:forEach items="${userList}" var="item">
 							<li>${item.product}${item.productUrl}</li>
 						</c:forEach>
 					</ul>
+					
+					
+					<button class="btn btn-warning" onclick="showPayment(),hideListPick()">  Next   </button>
+				</div>
+
+					<script charset="UTF-8"
+						src="https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js"
+						type="text/javascript"></script>
+					<div id="payment-div"></div>
+					<script type="text/javascript">
+						paymentwindow = new PaymentWindow({
+							'merchantnumber' : "8021018",
+							'amount' : "5",
+							'currency' : "SEK",
+							'windowstate' : "2"
+						});
+						paymentwindow.append('payment-div');
+						paymentwindow.open();
+					</script>
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
 				</div>
 			</div>
+
 		</div>
 	</div>
+
 </body>
 </html>
