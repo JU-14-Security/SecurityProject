@@ -11,33 +11,43 @@ import service.ListDAO;
 @Component
 public class ListManager {
 
-	
 	ListDAO listDAO;
 	DataCrypter crypter;
 
 	@Inject
 	public ListManager(ListDAO listDAO, DataCrypter crypter) {
-		this.crypter=crypter;
-		this.listDAO=listDAO;
+		this.crypter = crypter;
+		this.listDAO = listDAO;
 	}
-	
-	public ListManager(){
-		
-		
+
+	public ListManager() {
+
 	}
-	
-	public List<TopList> getTopListFromDB(){
-	List<TopList> topList=listDAO.getListItems();
-		
+
+	/***
+	 * Get logged in users topList
+	 * 
+	 * @author Joel
+	 * @param userId
+	 * @return user specific topList
+	 */
+	public List<TopList> getUserTopListFromDB(int userId) {
+		List<TopList> topList = listDAO.getUserListItems(userId);
 		return topList;
 	}
-	
-	public boolean addListItem(String product, String producturl){
-		
-		listDAO.addListItemToDB(new TopList(product, producturl));
-		
-		return true;
-		
+
+	public List<TopList> getTopListFromDB() {
+		List<TopList> topList = listDAO.getListItems();
+
+		return topList;
 	}
-	
+
+	public boolean addListItem(String product, String producturl, int userId) {
+
+		listDAO.addListItemToDB(new TopList(product, producturl, userId));
+
+		return true;
+
+	}
+
 }
