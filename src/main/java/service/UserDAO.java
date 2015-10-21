@@ -23,7 +23,6 @@ public class UserDAO {
 
 	}
 	
-
 	public void openConnection() {
 		try {
 			factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
@@ -59,14 +58,23 @@ public class UserDAO {
 		closeConnection();
 	}
 	
+	//..joel har pillat här..
+	private List<User> resultList;
+	
+	//..joel har pillat här..
+	public List<User> getUserList() {
+		return resultList;
+	}
+	
 	public boolean getUserFromDB(String userName, String passWord) {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery(
 				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
 		createQuery.setParameter("userName", userName);
 		createQuery.setParameter("passWord", passWord);
-		
-		List<User> resultList = createQuery.getResultList();
+
+		//..joel har pillat här..
+		resultList = createQuery.getResultList();
 		closeConnection();
 		
 		if(resultList.isEmpty()){
