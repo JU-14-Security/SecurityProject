@@ -1,39 +1,49 @@
 package model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the LIST database table.
  * 
  */
 @Entity
-@Table(name="LIST",schema="TOPLISTAN")
-@NamedQuery(name="TopList.findAll", query="SELECT t FROM TopList t")
+@Table(name = "LIST", schema = "TOPLISTAN")
+@NamedQuery(name = "TopList.findAll", query = "SELECT t FROM TopList t")
 public class TopList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	private String product;
 
-	@Column(name="PRODUCT_URL")
+	@Column(name = "PRODUCT_URL")
 	private String productUrl;
 
-	@Column(name="SEK_SUM")
+	@Column(name = "SEK_SUM")
 	private int sekSum;
+
+	@Column(name = "USERID")
+	private int userId;
 
 	public TopList() {
 	}
 
-	public TopList(String product, String productUrl) {
+	public TopList(String product, String productUrl, int userId) {
 		super();
 		this.product = product;
 		this.productUrl = productUrl;
 		this.sekSum = 0;
+		this.userId = userId;
 	}
 
 	public int getId() {
@@ -66,6 +76,13 @@ public class TopList implements Serializable {
 
 	public void setSekSum(int sekSum) {
 		this.sekSum = sekSum;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public int getUserId() {
+		return userId;
 	}
 
 }
