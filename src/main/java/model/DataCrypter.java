@@ -21,6 +21,7 @@ public class DataCrypter {
 
 		input+=salt;
 		
+		
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		byte[] enCryptedUsername = md.digest(input.getBytes("UTF-8"));
 				
@@ -28,7 +29,7 @@ public class DataCrypter {
         for (int i = 0; i < enCryptedUsername.length; ++i) {
           sb.append(Integer.toHexString((enCryptedUsername[i] & 0xFF) | 0x100).substring(1,3));
         }
-       
+        
 		return sb.toString();
 	}
 	

@@ -20,9 +20,6 @@ public class ListManager {
 		this.listDAO = listDAO;
 	}
 
-	public ListManager() {
-
-	}
 
 	/***
 	 * Get logged in users topList
@@ -35,10 +32,10 @@ public class ListManager {
 		List<TopList> topList = listDAO.getUserListItems(userId);
 		return topList;
 	}
-
-	public List<TopList> getTopListFromDB() {
-		List<TopList> topList = listDAO.getListItems();
-
+	
+	public List<TopList> getTopListFromDB(){
+	List<TopList> topList=listDAO.getListItems();
+		
 		return topList;
 	}
 
@@ -47,7 +44,7 @@ public class ListManager {
 		listDAO.addListItemToDB(new TopList(product, producturl, userId));
 
 		return true;
-
+		
 	}
-
+	
 }

@@ -31,7 +31,7 @@ public class UserManager {
 		try {
 			String passWordCrypto = crypter.inputHasher(passWord);
 			
-			if(userDAO.getUserFromDB(userName , passWordCrypto)){
+			if(userDAO.getCheckLogin(userName , passWordCrypto)){
 				
 				return true;
 			}else
@@ -72,13 +72,21 @@ public class UserManager {
 	}
 	
 	//..joel har pillat här..
-	public User getUser(String userName) {
-		List<User> userList = userDAO.getUserList();
-		for(User u : userList) {
-			if (u.getUsername().equals(userName)) {
-				return u;
-			}
+	public User getUser(String userName, String passWord) {
+		User user=null;
+		try {
+			String passWordCrypto = crypter.inputHasher(passWord);
+			user = userDAO.getUserFromDB(userName, passWordCrypto);
+			System.out.println(user.getUsername());
+		
+		} catch (NoSuchAlgorithmException e) {
+			
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+		
+			e.printStackTrace();
 		}
-		return null;
+		return user;
+	
 	}
 }

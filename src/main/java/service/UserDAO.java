@@ -58,15 +58,7 @@ public class UserDAO {
 		closeConnection();
 	}
 	
-	//..joel har pillat här..
-	private List<User> resultList;
-	
-	//..joel har pillat här..
-	public List<User> getUserList() {
-		return resultList;
-	}
-	
-	public boolean getUserFromDB(String userName, String passWord) {
+	public boolean getCheckLogin(String userName, String passWord) {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery(
 				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
@@ -74,7 +66,7 @@ public class UserDAO {
 		createQuery.setParameter("passWord", passWord);
 
 		//..joel har pillat här..
-		resultList = createQuery.getResultList();
+		List<User> resultList = createQuery.getResultList();
 		closeConnection();
 		
 		if(resultList.isEmpty()){
@@ -82,4 +74,26 @@ public class UserDAO {
 		}else
 			return true;
 	}
+	
+	public User getUserFromDB(String userName, String passWord) {
+		openConnection();
+		TypedQuery<User> createQuery = em.createQuery(
+				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
+		createQuery.setParameter("userName", userName);
+		createQuery.setParameter("passWord", passWord);
+
+		//..joel har pillat här..
+		List<User> resultList = createQuery.getResultList();
+		closeConnection();
+		
+		if(resultList.isEmpty()){
+			return null;
+		}else
+			return resultList.get(0);
+		
+		
+	}
+	
+	
+	
 }

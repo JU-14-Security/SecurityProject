@@ -48,18 +48,18 @@ public class TopController {
 	
 
 	@RequestMapping(value ={ "/Welcome", "/{s}/**", "/{url}"})
-	public ModelAndView welcome() {
-
+	public ModelAndView welcome(HttpServletRequest request) {
+	
 		return new ModelAndView("Welcome");
 	}
 
 	@RequestMapping(value = "/Home")
 	public ModelAndView home(HttpServletRequest request) {
-
 		ModelAndView model = new ModelAndView();
 		
 		if(request.getSession().getAttribute("username") != null)
 		{
+			System.out.println("Entered method in home");
 			model.setViewName("home");
 			User user = (User)request.getSession().getAttribute("username");
 			int userId = user.getId();
@@ -71,6 +71,7 @@ public class TopController {
 		}
 		else
 		{
+			
 			model.setViewName("redirect:/Welcome");
 		}
 
@@ -82,15 +83,15 @@ public class TopController {
 			@RequestParam("Producturl") String producturl) {
 
 		ModelAndView model = new ModelAndView();
-		
+		System.out.println("Entered additem");
+		User user1 = (User)request.getSession().getAttribute("username");
+		System.out.println(user1.getUsername());
 		if(request.getSession().getAttribute("username") != null)
 		{
 			User user = (User)request.getSession().getAttribute("username");
-			System.out.println("Entered additem");
+			System.out.println("Entered additem method");
 			listManager.addListItem(product, producturl, user.getId());
-			List<TopList> toplist = listManager.getTopListFromDB();
-
-			model.addObject("TopList", toplist);
+	
 			model.setViewName("redirect:/Home");
 		}
 		else
@@ -106,59 +107,49 @@ public class TopController {
 			@RequestParam("password") String passWord) {
 
 		ModelAndView model = new ModelAndView();
-		List<TopList> toplist = listManager.getTopListFromDB();
+		
 		
 		if (userManager.handleUserLogin(userName, passWord)) {
-			setSessionUser(request, userName);
-			
-			model.addObject("TopList", toplist);
-			System.out.println("Du lyckades logga in");
+			setSessionUser(request, userName, passWord);
 			model.setViewName("redirect:/Home");
-			return model;
+			
 
 		} else{
 			model.addObject("errorLog", "invalid username or password");
-
-		System.out.println("Du misslyckades att logga in");
-		model.setViewName("Welcome");
-		return model;
+			model.setViewName("Welcome");
 		}
+		return model;
 	}
 
 	@RequestMapping(value = "/Register", method = {RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView register(HttpServletRequest request, @RequestParam(value="username", required=false) String userName,
 			@RequestParam(value="password", required = false) String passWord) {
-
+		
 		try{
 			
 		
 		ModelAndView model = new ModelAndView();
-		List<TopList> toplist = listManager.getTopListFromDB();
 
 		if(userName.isEmpty() || userName == null || passWord.isEmpty() || passWord == null)
-		{
+		{	
 			model.setViewName("redirect:/Welcome");
 			return model;
 		}
 		
 		if (userManager.addUser(userName, passWord)) {
-			
-			model.addObject("TopList", toplist);
-			System.out.println("Du lyckades registrera dig");
-			// bellow currently not working
-			//setSessionUser(request, userName); 
+			setSessionUser(request, userName, passWord); 
 			model.setViewName("redirect:/Home");
 			return model;
 
 		} else{
 
-			System.out.println("Du misslyckades att registrera dig");
 			model.setViewName("Welcome");
 			model.addObject("errorReg", "Username already exists");
 			return model;
 		}
 		}catch(NullPointerException npe)
 		{
+			npe.printStackTrace();
 			return new ModelAndView("redirect:/Welcome");
 		}
 		
@@ -168,9 +159,12 @@ public class TopController {
 	public ModelAndView logout(HttpServletRequest request) {
 		
 		ModelAndView model = new ModelAndView("redirect:/Welcome");
+		return model;
+	}
+	
+	public void removeSessionUser(HttpServletRequest request){
 		request.getSession().removeAttribute("username");
 		
-		return model;
 	}
 	
 	/***
@@ -179,7 +173,7 @@ public class TopController {
 	 * @param request
 	 * @param userName
 	 */
-	public void setSessionUser(HttpServletRequest request, String userName) {
-		request.getSession().setAttribute("username", userManager.getUser(userName));
+	public void setSessionUser(HttpServletRequest request, String userName, String passWord) {
+		request.getSession().setAttribute("username", userManager.getUser(userName,passWord));
 	}
 }
