@@ -2,6 +2,7 @@ package model;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -68,5 +69,16 @@ public class UserManager {
 		
 		return false;
 
+	}
+	
+	//..joel har pillat här..
+	public User getUser(String userName) {
+		List<User> userList = userDAO.getUserList();
+		for(User u : userList) {
+			if (u.getUsername().equals(userName)) {
+				return u;
+			}
+		}
+		return null;
 	}
 }
