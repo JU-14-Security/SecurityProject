@@ -1,16 +1,11 @@
 package controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import model.ListManager;
 import model.TopList;
+import model.User;
 import model.UserManager;
-import service.ListDAO;
 
 /**
  * Class for handling request.
@@ -61,21 +56,23 @@ public class TopController {
 	@RequestMapping(value = "/Home")
 	public ModelAndView home(HttpServletRequest request) {
 
-		
 		ModelAndView model = new ModelAndView();
 		
 		if(request.getSession().getAttribute("username") != null)
 		{
 			model.setViewName("home");
+			User user = (User)request.getSession().getAttribute("username");
+			int userId = user.getId();
 			List<TopList> toplist = listManager.getTopListFromDB();
+			List<TopList> userList = listManager.getUserTopListFromDB(userId);
 			model.addObject("username", request.getSession().getAttribute("username"));
+			model.addObject("userList", userList);
 			model.addObject("TopList", toplist);
 		}
 		else
 		{
 			model.setViewName("redirect:/Welcome");
 		}
-		
 
 		return model;
 	}
@@ -88,10 +85,11 @@ public class TopController {
 		
 		if(request.getSession().getAttribute("username") != null)
 		{
+			User user = (User)request.getSession().getAttribute("username");
 			System.out.println("Entered additem");
-			listManager.addListItem(product, producturl);
+			listManager.addListItem(product, producturl, user.getId());
 			List<TopList> toplist = listManager.getTopListFromDB();
-			
+
 			model.addObject("TopList", toplist);
 			model.setViewName("redirect:/Home");
 		}
@@ -109,9 +107,9 @@ public class TopController {
 
 		ModelAndView model = new ModelAndView();
 		List<TopList> toplist = listManager.getTopListFromDB();
-
+		
 		if (userManager.handleUserLogin(userName, passWord)) {
-			request.getSession().setAttribute("username", userName);
+			setSessionUser(request, userName);
 			
 			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades logga in");
@@ -144,10 +142,11 @@ public class TopController {
 		}
 		
 		if (userManager.addUser(userName, passWord)) {
-			request.getSession().setAttribute("username", userName);
 			
 			model.addObject("TopList", toplist);
 			System.out.println("Du lyckades registrera dig");
+			// bellow currently not working
+			//setSessionUser(request, userName); 
 			model.setViewName("redirect:/Home");
 			return model;
 
@@ -173,5 +172,14 @@ public class TopController {
 		
 		return model;
 	}
-
+	
+	/***
+	 * Adds logged in user to session
+	 * @author Joel
+	 * @param request
+	 * @param userName
+	 */
+	public void setSessionUser(HttpServletRequest request, String userName) {
+		request.getSession().setAttribute("username", userManager.getUser(userName));
+	}
 }
