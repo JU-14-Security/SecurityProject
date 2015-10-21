@@ -54,6 +54,7 @@ body {
 #list {
 	margin-left: 30%;
 }
+
 #header {
 	height: 80px;
 	margin: 0px auto;
@@ -62,40 +63,43 @@ body {
 	padding-left: 40%;
 	padding-top: 1%;
 }
+
 .stencil {
 	margin: 0px auto;
 	font-size: 4em;
 	font-family: Impact, Charcoal, sans-serif;
 	display: inline;
-	}
+}
+
 #menu-items {
 	margin: 0px auto;
-}	
+}
 </style>
 </head>
 <body>
 	<div id="header">
-		<h1 class=stencil>TopListan  </h1>
+		<h1 class=stencil>TopListan</h1>
 	</div>
 	<div id="menu-header">
 		<div id="menu-items">
-		<form style="float:right;margin-right:20%;" action="/TopListan/Logout">
-		<input type="submit" value="Log out" />
-		</form>
-		<p style="float: right; margin-right: 10%;">Logged in as:
-			${username}</p>
+			<form style="float: right; margin-right: 20%;"
+				action="/TopListan/Logout">
+				<input type="submit" value="Log out" />
+			</form>
+			<p style="float: right; margin-right: 10%;">Logged in as:
+				${username.getUsername()}</p>
 		</div>
 	</div>
 
 
 	<br>
 	<ul>
-	<c:forEach items="${TopList}" var="item">
-			
-		<li>${item.product}    ${item.productUrl}</li>
-				
-			
-	</c:forEach> 
+		<c:forEach items="${TopList}" var="item">
+
+			<li>${item.product}${item.productUrl}</li>
+
+
+		</c:forEach>
 	</ul>
 	<br>
 
@@ -144,9 +148,30 @@ body {
 
 	<br>
 	<br>
-	<button>Betala</button>
+
+	<button data-toggle="modal" data-target="#pay-modal"
+		class="btn btn-info" type="button">Betala</button>
 	Visa/mastercard betalning för att höja sin saks rank i listan
 	<hr>
-	
-	</body>
+	<div id="pay-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add Funds</h4>
+				</div>
+				<div class="modal-body">
+					<ul>
+						<c:forEach items="${userList}" var="item">
+							<li>${item.product}${item.productUrl}</li>
+						</c:forEach>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 </html>
