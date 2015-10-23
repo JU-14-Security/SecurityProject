@@ -12,6 +12,11 @@ public class Filter {
 
 	}
 
+	/**
+	 * Checks an input string after unwanted charaters. We only allow a-Ö/0-9 in our username. 
+	 * @param input
+	 * @return true if no malicious input was found, false if found.
+	 */
 	public boolean validateInput(String input) {
 
 		for (char c : input.toCharArray()) {
@@ -63,17 +68,4 @@ public class Filter {
 		}
 	}
 
-	// for testing purpouses..
-	public static void main(String[] args) {
-		Filter f = new Filter();
-		String testUrl = "http://www.google.se<script></script>";
-		System.out.println("dirtyUrl: " + testUrl);
-		testUrl = f.cleanProductInput(testUrl);
-		System.out.println("cleanUrl: " + testUrl);
-		if (f.validateProduktUrl(testUrl)) {
-			System.out.println(testUrl + " valid");
-		} else {
-			System.out.println(testUrl + " invalid");
-		}
-	}
 }

@@ -3,10 +3,6 @@ package model;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.EntityExistsException;
-import javax.persistence.PersistenceException;
-import javax.persistence.RollbackException;
-import javax.persistence.TransactionRequiredException;
 
 import org.springframework.stereotype.Component;
 
@@ -35,33 +31,67 @@ public class ListManager {
 	 * @param userId
 	 * @return user specific topList
 	 */
-	public List<TopList> getUserTopListFromDB(int userId)throws Exception {
+	public List<TopList> getUserTopListFromDB(int userId) throws Exception {
 		List<TopList> topList = listDAO.getUserListItems(userId);
+		if(topList==null){
+			throw new Exception();
+		}
 		return topList;
 	}
 
-	public List<TopList> getTopListFromDB()throws Exception  {
+	/**
+	 * Method which calls the listDAO class, who returns all the list-items from
+	 * the database.
+	 * 
+	 * @return list of all items.
+	 * @throws Exception
+	 */
+	public List<TopList> getTopListFromDB() throws Exception {
 		List<TopList> topList = listDAO.getListItems();
-
+		if(topList==null){
+			throw new Exception();
+		}
 		return topList;
 	}
 
-	public boolean addListItem(String product, String producturl, int userId)throws Exception {
+	/**
+	 * Method which calls the addListItemToDB method in listDAO, which adds the
+	 * list-item.
+	 * 
+	 * @param product
+	 * @param producturl
+	 * @param userId
+	 * @throws Exception
+	 */
+	public void addListItem(String product, String producturl, int userId) throws Exception {
 		listDAO.addListItemToDB(new TopList(product, producturl, userId));
 
-		return true;
 	}
 
-	public void updateListItemValue(String id, String amount)throws Exception {
+	/**
+	 * Method which handles the logic of updating an item's sekSum/value. It
+	 * first parses the id and amount to integers and fetches the list-item
+	 * object via the ID. It then updates the list item's seksum witch the
+	 * amount by calling the updateListItem() method in listDAO class.
+	 * 
+	 * @param id
+	 * @param amount
+	 * @throws Exception
+	 */
+	public void updateListItemValue(String id, String amount) throws Exception {
 		try {
 			int parsedID = Integer.parseInt(id);
 			int parsedAmount = Integer.parseInt(amount);
 			TopList toplist = listDAO.getListItemByID(parsedID);
-			System.out.println(toplist.getProduct());
-			listDAO.updateListItem(toplist, parsedAmount);
+			if(toplist!=null){
+				listDAO.updateListItem(toplist, parsedAmount);
+			}else
+				throw new Exception();
 
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
+		} catch (Exception e){
+			throw e;
 		}
 	}
 

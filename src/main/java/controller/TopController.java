@@ -1,11 +1,8 @@
 package controller;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -25,13 +22,14 @@ import model.UserManager;
 /**
  * Class for handling request.
  * 
- * @author Erik Nylander, Robin Ejderholt, Joel Julle ToaRulle
+ * @author Erik Nylander
  *
  */
 @Controller
 public class TopController {
 	UserManager userManager;
 	ListManager listManager;
+	Filter filter;
 
 	/**
 	 * Constructor for the Spring MVC Controller.
@@ -41,35 +39,54 @@ public class TopController {
 	 */
 
 	@Inject
-	public TopController(UserManager um, ListManager lm) {
+	public TopController(UserManager um, ListManager lm, Filter filter) {
 		this.userManager = um;
 		this.listManager = lm;
+		this.filter = filter;
 	}
 
 	public TopController() {
 
 	}
 
-	@RequestMapping(value = { "/Welcome", "/{s}/**", "/{url}" })
+	/**
+	 * Method which takes request on /Welcome and any other random Url which the
+	 * user might have entered. Returns the Welcome page.
+	 */
+	@RequestMapping(value = { "/Welcome", "/{s}/**", "/{url}", "/" })
 	public ModelAndView welcome(HttpServletRequest request) {
 
 		return new ModelAndView("Welcome");
 	}
 
+	/**
+	 * Method which handles the main-page 'Home'. If the session attribute
+	 * 'username' is null it redirects to the Login-Welcome page. If the user is
+	 * logged in. It fetches all the list items & the logged in user's items and
+	 * returns the home view.
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/Home")
 	public ModelAndView home(HttpServletRequest request) throws Exception {
 		ModelAndView model = new ModelAndView();
 
 		if (request.getSession().getAttribute("username") != null) {
-			System.out.println("Entered method in home");
+
 			model.setViewName("home");
 			User user = (User) request.getSession().getAttribute("username");
 			int userId = user.getId();
-			List<TopList> toplist = listManager.getTopListFromDB();
-			List<TopList> userList = listManager.getUserTopListFromDB(userId);
-			model.addObject("username", request.getSession().getAttribute("username"));
-			model.addObject("userList", userList);
-			model.addObject("TopList", toplist);
+			try {
+				List<TopList> toplist = listManager.getTopListFromDB();
+				List<TopList> userList = listManager.getUserTopListFromDB(userId);
+				model.addObject("username", request.getSession().getAttribute("username"));
+				model.addObject("userList", userList);
+				model.addObject("TopList", toplist);
+			} catch (Exception e) {
+				throw e;
+			}
 		} else {
 
 			model.setViewName("redirect:/Welcome");
@@ -78,43 +95,71 @@ public class TopController {
 		return model;
 	}
 
+	/**
+	 * Method which handles requests on /addItem. Checks if the user is logged
+	 * in, if yes, it adds the list-item. If not logged in, redirects to
+	 * Welcome.
+	 * 
+	 * @param request
+	 * @param product
+	 * @param producturl
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/addItem", method = RequestMethod.POST)
 	public ModelAndView addListItem(HttpServletRequest request, @RequestParam("Product") String product,
 			@RequestParam("Producturl") String producturl) throws Exception {
 
 		ModelAndView model = new ModelAndView();
-		System.out.println("Entered additem");
-		User user1 = (User) request.getSession().getAttribute("username");
-		System.out.println(user1.getUsername());
-
-		// Joels skit om urlfuckidering...
-		Filter filter = new Filter();
-		product = filter.cleanProductInput(product);
-		producturl = filter.cleanProductInput(producturl);
 
 		if (request.getSession().getAttribute("username") != null) {
+			product = filter.cleanProductInput(product);
+			producturl = filter.cleanProductInput(producturl);
+
 			User user = (User) request.getSession().getAttribute("username");
-			if (filter.validateProduktUrl(producturl)) {
-				System.out.println("adding valid url");
-				listManager.addListItem(product, producturl, user.getId());
-			}
+
+			listManager.addListItem(product, producturl, user.getId());
+
 			model.setViewName("redirect:/Home");
+
 		} else {
 			model.setViewName("redirect:/Welcome");
 		}
+
 		return model;
 	}
 
+	/**
+	 * Method which handles requests on /Login. First validates the username
+	 * input. If input was ok, it calls the handleUserLogin() method which
+	 * returns true or false if the user login was successfull. If successfull,
+	 * it sets the user to the session as an attribute.
+	 * 
+	 * @param request
+	 * @param userName
+	 * @param passWord
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public ModelAndView login(HttpServletRequest request, @RequestParam("username") String userName,
 			@RequestParam("password") String passWord) throws Exception {
 
 		ModelAndView model = new ModelAndView();
 
-		if (userManager.handleUserLogin(userName, passWord)) {
-			setSessionUser(request, userName, passWord);
-			model.setViewName("redirect:/Home");
+		if (filter.validateInput(userName)) {
+			try {
+				if (userManager.handleUserLogin(userName, passWord)) {
+					setSessionUser(request, userName, passWord);
+					model.setViewName("redirect:/Home");
 
+				} else {
+					model.addObject("errorLog", "invalid username or password");
+					model.setViewName("Welcome");
+				}
+			} catch (Exception e) {
+				throw e;
+			}
 		} else {
 			model.addObject("errorLog", "invalid username or password");
 			model.setViewName("Welcome");
@@ -122,6 +167,19 @@ public class TopController {
 		return model;
 	}
 
+	/**
+	 * Method which handles requests on /Register. First validates the username
+	 * input and checks for invalid characters. If validation was ok, it tries
+	 * add the user to the database via the addUser method in userManager. If
+	 * successfully added, it sets the user as a sessionAttribute and returns
+	 * the home view.
+	 * 
+	 * @param request
+	 * @param userName
+	 * @param passWord
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/Register", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView register(HttpServletRequest request,
 			@RequestParam(value = "username", required = false) String userName,
@@ -135,28 +193,40 @@ public class TopController {
 				model.setViewName("redirect:/Welcome");
 				return model;
 			}
+			if (filter.validateInput(userName)) {
+				
+				
+					if (userManager.addUser(userName, passWord)) {
+						setSessionUser(request, userName, passWord);
+						model.setViewName("redirect:/Home");
+						return model;
 
-			if (userManager.addUser(userName, passWord)) {
-				setSessionUser(request, userName, passWord);
-				model.setViewName("redirect:/Home");
-				return model;
+					} else {
 
+						model.setViewName("Welcome");
+						model.addObject("errorReg", "Username already exists");
+						return model;
+					}
 			} else {
-
 				model.setViewName("Welcome");
 				model.addObject("errorReg", "Username already exists");
 				return model;
 			}
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
-			return new ModelAndView("redirect:/Welcome");
+		
+		} catch(Exception e){
+			throw e;
 		}
-
 	}
 
+	/**
+	 * Method for login out. Removes the user's sessionAttribute and returns the
+	 * welcome view.
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/Logout")
 	public ModelAndView logout(HttpServletRequest request) {
-
 		removeSessionUser(request);
 		ModelAndView model = new ModelAndView("redirect:/Welcome");
 		return model;
@@ -173,32 +243,44 @@ public class TopController {
 	 * @author Joel
 	 * @param request
 	 * @param userName
-	 * @throws IndexOutOfBoundsException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalStateException
-	 * @throws PersistenceException
-	 * @throws UnsupportedEncodingException
-	 * @throws NoSuchAlgorithmException
 	 */
 	public void setSessionUser(HttpServletRequest request, String userName, String passWord) throws Exception {
 		request.getSession().setAttribute("username", userManager.getUser(userName, passWord));
 	}
 
-	@RequestMapping(value = "/Update")
+	/**
+	 * Method used when updating an item's value after a payment has been done.
+	 * This method is only called via an Ajax javascript after a payment is
+	 * completed.
+	 * 
+	 * @param request
+	 * @param id
+	 * @param amount
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/Update", method = RequestMethod.POST)
 	public ModelAndView update(HttpServletRequest request, @RequestParam("id") String id,
 			@RequestParam("amount") String amount) throws Exception {
-		System.out.println("id:" + id + " amount: " + amount);
 
-		listManager.updateListItemValue(id, amount);
+		ModelAndView model = new ModelAndView();
+		if (filter.validateInput(id) && filter.validateInput(amount)) {
 
-		ModelAndView model = new ModelAndView("home");
-		model.addObject("successPayment", "Payment was successfull");
+			try{
+			listManager.updateListItemValue(id, amount);
+			model.setViewName("home");
+			}catch(Exception e){
+				throw e;
+			}
+		} else {
+			model.setViewName("error");
+		}
+
 		return model;
 	}
 
 	@ExceptionHandler(RuntimeException.class)
 	public String databaseConnectionError(Model model) {
-		model.addAttribute("error", "Snopp");
 		return "error";
 	}
 }
