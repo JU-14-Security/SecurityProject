@@ -37,7 +37,7 @@ public class UserDAO {
 		}
 	}
 
-	public void closeConnection() throws IllegalStateException {
+	public void closeConnection() throws Exception {
 		em.close();
 	}
 
@@ -97,5 +97,4 @@ public class UserDAO {
 			return resultList.get(0);
 		}
 	}
-
 }
