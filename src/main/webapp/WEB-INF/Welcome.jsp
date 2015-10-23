@@ -27,7 +27,7 @@
 	
 	function validateRegUsernameInput(input) {
 
-		if (!input.value.match(/^[0-9A-Ö]+$/)) {
+		if (!input.value.match(/^[a-zA-ZäöåÄÖÅ]+$/)) {
 
 			input.style.backgroundColor = "#F78181";
 			
@@ -73,7 +73,7 @@
 	}
 	function validateLogUsernameInput(input) {
 
-		if (!input.value.match(/^[0-9A-Ö]+$/)) {
+		if (!input.value.match(/^[a-zA-ZäöåÄÖÅ]+$/)) {
 
 			input.style.backgroundColor = "#F78181";
 			
