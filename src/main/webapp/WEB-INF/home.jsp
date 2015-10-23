@@ -136,7 +136,7 @@ background: -webkit-linear-gradient(top, #000000, #1d1d1d, #1d1d1d,#1d1d1d,#1d1d
 	
 }
 
-#list2 { width:114%; }
+#list2 { width:101%; }
 #list2 ol { font-style:italic; font-family:Georgia, Times, serif; font-size:24px; color:#bfe1f1; display: table; margin: auto; }
 #list2 ol li { }
 #list2 ol li p { padding:8px; font-style:normal; font-family:Arial; font-size:15px; color:#eee; border-left: 1px solid #999; }
@@ -244,7 +244,7 @@ background: #1d1d1d;
  	<ol>
  	<c:forEach items="${TopList}" var="item">
    
-  	<li><p><em>${item.product}    ${item.productUrl}</em></p></li>
+  	<li><p><em>${item.product}</em> <a href="http://${item.productUrl}" target="_blank">${item.productUrl}</a></p></li>
     
  	</c:forEach> 
  	</ol>
