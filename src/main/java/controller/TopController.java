@@ -56,7 +56,7 @@ public class TopController {
 	@RequestMapping(value = "/Home")
 	public ModelAndView home(HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
-		
+		System.out.println("Entered home");
 		if(request.getSession().getAttribute("username") != null)
 		{
 			System.out.println("Entered method in home");
@@ -157,7 +157,7 @@ public class TopController {
 
 	@RequestMapping(value = "/Logout")
 	public ModelAndView logout(HttpServletRequest request) {
-		
+		removeSessionUser(request);
 		ModelAndView model = new ModelAndView("redirect:/Welcome");
 		return model;
 	}
@@ -175,5 +175,17 @@ public class TopController {
 	 */
 	public void setSessionUser(HttpServletRequest request, String userName, String passWord) {
 		request.getSession().setAttribute("username", userManager.getUser(userName,passWord));
+	}
+	
+	@RequestMapping(value = "/Update")
+	public ModelAndView update(HttpServletRequest request, @RequestParam("id") String id,
+			@RequestParam("amount") String amount ) {
+		System.out.println("id:" +id + " amount: "+amount);
+		
+		listManager.updateListItemValue(id, amount);
+		
+		ModelAndView model = new ModelAndView("home");
+		model.addObject("successPayment","Payment was successfull");
+		return model;
 	}
 }

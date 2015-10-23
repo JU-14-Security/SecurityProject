@@ -20,6 +20,9 @@ public class ListManager {
 		this.listDAO = listDAO;
 	}
 
+	public ListManager(){
+		
+	}
 
 	/***
 	 * Get logged in users topList
@@ -44,6 +47,20 @@ public class ListManager {
 		listDAO.addListItemToDB(new TopList(product, producturl, userId));
 
 		return true;
+		
+	}
+	
+	public void updateListItemValue(String id, String amount){
+		try{
+		int parsedID=Integer.parseInt(id);
+		int parsedAmount=Integer.parseInt(amount);	
+		TopList toplist=listDAO.getListItemByID(parsedID);
+		System.out.println(toplist.getProduct());
+		listDAO.updateListItem(toplist, parsedAmount);
+		
+		}catch(NumberFormatException e){
+			e.printStackTrace();
+		}
 		
 	}
 	

@@ -28,15 +28,21 @@ public class UserManager {
 	}
 	
 	public boolean handleUserLogin(String userName, String passWord){
+		User user=null;
+		User validUser=null;
 		try {
-			String passWordCrypto = crypter.inputHasher(passWord);
 			
-			if(userDAO.getCheckLogin(userName , passWordCrypto)){
-				
+			// För att hämta användarens salt
+			user=userDAO.getUserLogin(userName);
+			
+			String salt=user.getPassword().substring(0, 32);		
+			String passWordCrypto = crypter.passwordHasher(passWord, salt);
+			validUser= userDAO.getUserFromDB(userName, passWordCrypto);
+			
+			if(validUser!=null){
+				System.out.println("returnar true från handleUserLogin");
 				return true;
-			}else
-				return false;
-			
+			}
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,20 +50,20 @@ public class UserManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.out.println("returnar false från handleuserlogin");
 		return false;
 	}
 	
 	public boolean addUser(String userName, String passWord){
 		try {
-			
-			String passWordCrypto = crypter.inputHasher(passWord);
 			if(userDAO.checkifAvailable(userName)){
+				String salt = crypter.getRandomSalt();
+				String passWordCrypto = crypter.passwordHasher(passWord, salt);
 				
+				System.out.println("addar user "+userName);
 				userDAO.addUser(new User(userName,passWordCrypto));
 				return true;
-			}else
-				return false;
+			}
 			
 		} catch (NoSuchAlgorithmException e) {
 			
@@ -73,20 +79,31 @@ public class UserManager {
 	
 	//..joel har pillat här..
 	public User getUser(String userName, String passWord) {
-		User user=null;
-		try {
-			String passWordCrypto = crypter.inputHasher(passWord);
-			user = userDAO.getUserFromDB(userName, passWordCrypto);
-			System.out.println(user.getUsername());
 		
-		} catch (NoSuchAlgorithmException e) {
+		User user=null;
+		User validUser=null;
+		try {
 			
+			// För att hämta användarens salt
+			user=userDAO.getUserLogin(userName);
+			
+			String salt=user.getPassword().substring(0, 32);		
+			String passWordCrypto = crypter.passwordHasher(passWord, salt);
+			validUser= userDAO.getUserFromDB(userName, passWordCrypto);
+			
+			if(validUser==null){
+				System.out.println("returnar null från getUser");
+				return null;
+			}
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-		
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return user;
+		System.out.println("returnar inte null från getUser");
+		return validUser;
 	
 	}
 }

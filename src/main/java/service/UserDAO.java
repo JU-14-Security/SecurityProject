@@ -58,21 +58,20 @@ public class UserDAO {
 		closeConnection();
 	}
 	
-	public boolean getCheckLogin(String userName, String passWord) {
+	public User getUserLogin(String userName) {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery(
-				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
+				"SELECT c FROM User c WHERE c.username = :userName", User.class);
 		createQuery.setParameter("userName", userName);
-		createQuery.setParameter("passWord", passWord);
+		
 
-		//..joel har pillat här..
 		List<User> resultList = createQuery.getResultList();
 		closeConnection();
 		
 		if(resultList.isEmpty()){
-			return false;
+			return null;
 		}else
-			return true;
+			return resultList.get(0);
 	}
 	
 	public User getUserFromDB(String userName, String passWord) {

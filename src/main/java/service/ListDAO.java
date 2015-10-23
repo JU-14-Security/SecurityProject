@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import model.TopList;
@@ -16,7 +17,7 @@ public class ListDAO {
 	private static final String PERSISTENCE_UNIT_NAME = "TopListan";
 	private EntityManagerFactory factory;
 	private EntityManager em;
-
+	private PersistenceUnitUtil util;
 	public ListDAO() {
 
 	}
@@ -25,7 +26,7 @@ public class ListDAO {
 		try {
 			factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			em = factory.createEntityManager();
-
+			util = factory.getPersistenceUnitUtil();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +38,7 @@ public class ListDAO {
 
 	public List<TopList> getListItems() {
 		openConnection();
-		TypedQuery<TopList> createQuery = em.createQuery("SELECT c FROM TopList c", TopList.class);
+		TypedQuery<TopList> createQuery = em.createQuery("SELECT c FROM TopList c ORDER BY c.sekSum DESC", TopList.class);
 
 		List<TopList> resultList = createQuery.getResultList();
 		closeConnection();
@@ -58,12 +59,13 @@ public class ListDAO {
 		TypedQuery<TopList> createQuery = em.createQuery("SELECT t FROM TopList t WHERE t.userId = :userId", TopList.class)
 				.setParameter("userId", userId);
 		List<TopList> usersList = createQuery.getResultList();
+		closeConnection();
 		return usersList;
 	}
 
 	public void addListItemToDB(TopList item) {
 		try {
-			System.out.println("addar" + item.getProduct());
+			
 			openConnection();
 			em.getTransaction().begin();
 			em.persist(item);
@@ -72,6 +74,31 @@ public class ListDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public TopList getListItemByID(int id){
+		System.out.println("Hämtar listitem med id");
+		openConnection();
+		TypedQuery<TopList> createQuery = em.createQuery("SELECT t FROM TopList t WHERE t.id = :id", TopList.class)
+				.setParameter("id", id);
+		List<TopList> toplist = createQuery.getResultList();
+		closeConnection();
+
+		return toplist.get(0);
+		
+	}
+	public void updateListItem(TopList toplist, int addValue){
+		System.out.println("uppdaterad listitem med id");
+		openConnection();
+		Object identifier = util.getIdentifier(toplist);
+
+		TopList toplistQuery = em.find(TopList.class, identifier);
+		int oldValue = toplistQuery.getSekSum();
+		toplistQuery.setSekSum(oldValue+addValue);
+
+		em.getTransaction().begin();
+		em.merge(toplistQuery);
+		em.getTransaction().commit();
+		closeConnection();
 	}
 
 }

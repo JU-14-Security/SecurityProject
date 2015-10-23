@@ -23,6 +23,7 @@ public class User implements Serializable {
 		this.password = password;
 		this.role = "User";
 		this.username = username;
+		
 	}
 
 	private String password;
@@ -30,7 +31,7 @@ public class User implements Serializable {
 	private String role;
 
 	private String username;
-
+	
 	public User() {
 	}
 
