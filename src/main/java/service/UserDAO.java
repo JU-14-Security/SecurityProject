@@ -2,10 +2,13 @@ package service;
 
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
@@ -22,77 +25,77 @@ public class UserDAO {
 	public UserDAO() {
 
 	}
-	
-	public void openConnection() {
+
+	public void openConnection()throws Exception {
 		try {
 			factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			em = factory.createEntityManager();
 
 		} catch (PersistenceException e) {
 			e.printStackTrace();
+			throw e;
 		}
 	}
 
-	public void closeConnection() {
+	public void closeConnection() throws IllegalStateException {
 		em.close();
 	}
-	
-	public boolean checkifAvailable(String userName){
+
+	public boolean checkifAvailable(String userName)throws Exception {
 		openConnection();
-		TypedQuery<User> createQuery = em.createQuery(
-				"SELECT c FROM User c WHERE c.username = :userName", User.class);
+		TypedQuery<User> createQuery = em.createQuery("SELECT c FROM User c WHERE c.username = :userName", User.class);
 		createQuery.setParameter("userName", userName);
-		if(createQuery.getResultList().isEmpty()){
+		if (createQuery.getResultList().isEmpty()) {
 			closeConnection();
 			return true;
-		}else
+		} else
 			closeConnection();
-			return false;
+		return false;
 	}
 
-	public void addUser(User user) {
-		openConnection();
-		em.getTransaction().begin();
-		em.persist(user);
-		em.getTransaction().commit();
-		closeConnection();
+	public void addUser(User user) throws Exception {
+		try {
+			openConnection();
+			 em.getTransaction().begin();
+			em.persist(user);
+			em.getTransaction().commit();
+			closeConnection();
+		} catch (Exception e) {
+			System.out.println("kastar exception");
+			throw e;
+		}
 	}
-	
-	public User getUserLogin(String userName) {
+
+	public User getUserLogin(String userName) throws Exception {
 		openConnection();
-		TypedQuery<User> createQuery = em.createQuery(
-				"SELECT c FROM User c WHERE c.username = :userName", User.class);
+		TypedQuery<User> createQuery = em.createQuery("SELECT c FROM User c WHERE c.username = :userName", User.class);
 		createQuery.setParameter("userName", userName);
-		
 
 		List<User> resultList = createQuery.getResultList();
 		closeConnection();
-		
-		if(resultList.isEmpty()){
+
+		if (resultList.isEmpty()) {
 			return null;
-		}else
+		} else
 			return resultList.get(0);
 	}
-	
-	public User getUserFromDB(String userName, String passWord) {
+
+	public User getUserFromDB(String userName, String passWord)throws Exception  {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery(
 				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
 		createQuery.setParameter("userName", userName);
 		createQuery.setParameter("passWord", passWord);
 
-		//..joel har pillat här..
+		// ..joel har pillat här..
 		List<User> resultList = createQuery.getResultList();
 		closeConnection();
-		
-		if(resultList.isEmpty()){
+
+		if (resultList.isEmpty()) {
 			return null;
-		}else
+		} else {
 			return resultList.get(0);
-		
-		
+		}
 	}
-	
-	
-	
+
 }

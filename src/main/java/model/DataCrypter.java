@@ -1,53 +1,44 @@
 package model;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-
 import org.springframework.stereotype.Component;
-
-
 
 @Component
 public class DataCrypter {
-	
-	
-	public DataCrypter(){
-		
+
+	public DataCrypter() {
+
 	}
 
-	public String passwordHasher(String input, String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException{
-		
-		String saltAndPW= input+salt;
-		
+	public String passwordHasher(String input, String salt) throws Exception {
+
+		String saltAndPW = input + salt;
+
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		byte[] enCryptedUsername = md.digest(saltAndPW.getBytes("UTF-8"));
-				
+
 		StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < enCryptedUsername.length; ++i) {
-          sb.append(Integer.toHexString((enCryptedUsername[i] & 0xFF) | 0x100).substring(1,3));
-        }
-        
-		return salt+sb.toString();
+		for (int i = 0; i < enCryptedUsername.length; ++i) {
+			sb.append(Integer.toHexString((enCryptedUsername[i] & 0xFF) | 0x100).substring(1, 3));
+		}
+
+		return salt + sb.toString();
 	}
 
-	public String getRandomSalt(){
+	public String getRandomSalt() {
 		final Random r = new SecureRandom();
 		byte[] salt = new byte[16];
 		r.nextBytes(salt);
-	
-		
+
 		StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < salt.length; ++i) {
-          sb.append(Integer.toHexString((salt[i] & 0xFF) | 0x100).substring(1,3));
-        }
-        
-        System.out.println("Random salt "+sb.toString());
+		for (int i = 0; i < salt.length; ++i) {
+			sb.append(Integer.toHexString((salt[i] & 0xFF) | 0x100).substring(1, 3));
+		}
+
+		System.out.println("Random salt " + sb.toString());
 		return sb.toString();
 	}
 }
