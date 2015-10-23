@@ -5,6 +5,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ * Input validation filter.
+ */
 @Component
 public class Filter {
 

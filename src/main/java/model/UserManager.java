@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import service.UserDAO;
 
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ * Handles the logic of user login and registration.
+ */
 @Component
 public class UserManager {
 
@@ -81,6 +86,7 @@ public class UserManager {
 	public boolean addUser(String userName, String passWord) throws Exception {
 		try {
 			if (userDAO.checkifAvailable(userName)) {
+				System.out.println("Name not taken");
 				String salt = crypter.getRandomSalt();
 				String passWordCrypto = crypter.passwordHasher(passWord, salt);
 

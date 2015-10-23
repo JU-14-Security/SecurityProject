@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 
 import model.User;
 
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ *	Handles the user database transcations.
+ */
 @Component
 public class UserDAO {
 
@@ -60,11 +65,13 @@ public class UserDAO {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery("SELECT c FROM User c WHERE c.username = :userName", User.class);
 		createQuery.setParameter("userName", userName);
-		closeConnection();
 		if (createQuery.getResultList().isEmpty()) {
+			closeConnection();
 			return true;
-		} else
+		} else{
+			closeConnection();
 		return false;
+		}
 	}
 
 	/**
@@ -74,16 +81,13 @@ public class UserDAO {
 	 * @throws Exception
 	 */
 	public void addUser(User user) throws Exception {
-		try {
+		
 			openConnection();
 			em.getTransaction().begin();
 			em.persist(user);
 			em.getTransaction().commit();
 			closeConnection();
-		} catch (Exception e) {
-			
-			throw e;
-		}
+		
 	}
 
 	/**

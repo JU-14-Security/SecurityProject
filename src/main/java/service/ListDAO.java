@@ -14,6 +14,11 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import model.TopList;
 
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ *	Handles the List userbase transcations.
+ */
 @Component
 public class ListDAO {
 
@@ -89,6 +94,7 @@ public class ListDAO {
 				.setParameter("userId", userId);
 		List<TopList> usersList = createQuery.getResultList();
 		closeConnection();
+		
 		if(usersList.isEmpty()){
 			return null;
 		}else

@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 
 import service.ListDAO;
 
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ * Handles the logic for managing list-items.
+ */
 @Component
 public class ListManager {
 
@@ -33,9 +38,7 @@ public class ListManager {
 	 */
 	public List<TopList> getUserTopListFromDB(int userId) throws Exception {
 		List<TopList> topList = listDAO.getUserListItems(userId);
-		if(topList==null){
-			throw new Exception();
-		}
+		
 		return topList;
 	}
 
@@ -48,9 +51,7 @@ public class ListManager {
 	 */
 	public List<TopList> getTopListFromDB() throws Exception {
 		List<TopList> topList = listDAO.getListItems();
-		if(topList==null){
-			throw new Exception();
-		}
+	
 		return topList;
 	}
 

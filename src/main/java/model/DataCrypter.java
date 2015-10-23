@@ -7,7 +7,11 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 
-
+/**
+ * 
+ * @author Erik Nylander, Robin, Joel
+ * Password hasher.
+ */
 @Component
 public class DataCrypter {
 	
