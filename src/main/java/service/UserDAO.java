@@ -2,13 +2,10 @@ package service;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
-import javax.persistence.RollbackException;
-import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
@@ -26,7 +23,12 @@ public class UserDAO {
 
 	}
 
-	public void openConnection()throws Exception {
+	/**
+	 * Opens the connection to the database.
+	 * 
+	 * @throws Exception
+	 */
+	public void openConnection() throws Exception {
 		try {
 			factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			em = factory.createEntityManager();
@@ -37,35 +39,62 @@ public class UserDAO {
 		}
 	}
 
+	/**
+	 * Closes the connection to the database.
+	 * 
+	 * @throws IllegalStateException
+	 */
 	public void closeConnection() throws Exception {
 		em.close();
 	}
 
-	public boolean checkifAvailable(String userName)throws Exception {
+	/**
+	 * Method which checks if the username is already taken or not. Called when
+	 * registering a user.
+	 * 
+	 * @param userName
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkifAvailable(String userName) throws Exception {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery("SELECT c FROM User c WHERE c.username = :userName", User.class);
 		createQuery.setParameter("userName", userName);
+		closeConnection();
 		if (createQuery.getResultList().isEmpty()) {
-			closeConnection();
 			return true;
 		} else
-			closeConnection();
 		return false;
 	}
 
+	/**
+	 * Method which adds a user to the database.
+	 * 
+	 * @param user
+	 * @throws Exception
+	 */
 	public void addUser(User user) throws Exception {
 		try {
 			openConnection();
-			 em.getTransaction().begin();
+			em.getTransaction().begin();
 			em.persist(user);
 			em.getTransaction().commit();
 			closeConnection();
 		} catch (Exception e) {
-			System.out.println("kastar exception");
+			
 			throw e;
 		}
 	}
 
+	/**
+	 * Fetches a user from the database via the username. This method is used to
+	 * fetch the salt from the password which later is used to check if valid
+	 * input was given.
+	 * 
+	 * @param userName
+	 * @return the user object.
+	 * @throws Exception
+	 */
 	public User getUserLogin(String userName) throws Exception {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery("SELECT c FROM User c WHERE c.username = :userName", User.class);
@@ -80,7 +109,16 @@ public class UserDAO {
 			return resultList.get(0);
 	}
 
-	public User getUserFromDB(String userName, String passWord)throws Exception  {
+	/**
+	 * Method used after the salt has been retrieved and hashed together with
+	 * the password-input. Returns the user object if password was correct.
+	 * 
+	 * @param userName
+	 * @param passWord
+	 * @return
+	 * @throws Exception
+	 */
+	public User getUserFromDB(String userName, String passWord) throws Exception {
 		openConnection();
 		TypedQuery<User> createQuery = em.createQuery(
 				"SELECT c FROM User c WHERE c.username = :userName and c.password = :passWord", User.class);
@@ -97,4 +135,5 @@ public class UserDAO {
 			return resultList.get(0);
 		}
 	}
+
 }
