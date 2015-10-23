@@ -8,7 +8,9 @@
 
 <html>
 <head>
-<meta charset="utf-8">
+
+<meta charset="utf-8" >
+
 <title>Home</title>
 
 <link rel="stylesheet"
@@ -123,48 +125,44 @@
 </script>
 
 <style type="text/css">
-body {
-	font-family: Verdana, Geneva, sans-serif;
-	padding: 0px;
-	height: 100%;
-	background-color: #D3EDF5;
-}
+body{
+    background: -webkit-linear-gradient(Left, #000000,#1d1d1d,#1d1d1d,#1d1d1d,#1d1d1d,#1d1d1d,#000000);
+   
+   }
 
-#header {
-	height: 80px;
-	margin: 0px auto;
-	background-color: #FFFFFF;
-	color: #2879b3;
-	padding-left: 40%;
-	padding-top: 1%;
-}
+   #header {
+    height: 80px;
+    margin: 0px auto;
+    background-color: #1d1d1d;
+    color: #FFF;
+    padding-left: 45%;
+    padding-top: 1%;
+    background: -webkit-linear-gradient(Left, #000000,#1d1d1d,#1d1d1d,#1d1d1d,#1d1d1d,#1d1d1d,#000000);
+    text-shadow: 5px 5px #000000;
+   }
+   .stencil {
+    margin: 0px auto;
+    font-size: 4em;
+    font-family: Impact, Charcoal, sans-serif;
+    display: inline;
+    }
 
-.stencil {
-	margin: 0px auto;
-	font-size: 4em;
-	font-family: Impact, Charcoal, sans-serif;
-	display: inline;
-}
-
-#login-form {
-	float: right;
-}
-
-#list {
-	margin-left: 30%;
-}
-
-#Login-Box {
-	background-color: #FFFFFF;
-	margin-left: 35%;
-	margin-right: 35%;
-	margin-top: 5%;
-	padding: 15px;
-	border-style: solid;
-	border-width: 1px;
-	border-color: black;
-}
-
+ #login-form {
+     float:right;
+   }
+   #list {
+    margin-left:30%;
+   }
+   #Login-Box {
+    background-color:#FFFFFF;
+    margin-left:35%;
+    margin-right:35%;
+    margin-top:5%;
+    padding:15px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+   }
 #regbtn {
 	opacity: 0.5;
 }
@@ -187,7 +185,8 @@ body {
 			Username:<input type="text" id="loginusername" name="username"
 				placeholder="Enter Username" required oninput="validateLogUsernameInput(this), okLogForm()"> 
 				<br> Password:
-			<input type="password" id="loginpassword" name="password" required oninput="validateLogPasswordInput(this), okLogForm()">
+			<input type="password" id="loginpassword" name="password" required 
+			oninput="validateLogPasswordInput(this), okLogForm()" AUTOCOMPLETE='OFF'>
 			<br> <input id="logbtn" type="submit"
 				class="btn-primary btn-default" value="Log in" disabled>
 		</form>
@@ -204,7 +203,7 @@ body {
 				placeholder="Enter Username" required oninput="validateRegUsernameInput(this), okRegForm()">
 			<br> 
 			Password: <input type="password" id="regpassword"
-				name="password" required oninput="validateRegPasswordInput(this), okRegForm()"> <br> 
+				name="password" required oninput="validateRegPasswordInput(this), okRegForm()" AUTOCOMPLETE='OFF'> <br> 
 				<input id="regbtn"
 				type="submit" class="btn-primary btn-default" value="Register" disabled>
 		</form>
